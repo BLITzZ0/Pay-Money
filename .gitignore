@@ -1,0 +1,40 @@
+# === Node.js / Express ===
+node_modules/
+.env
+.env.*.local
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+debug.log
+
+# === React ===
+build/
+dist/
+
+# === System / Editor Files ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# === Coverage / Testing ===
+coverage/
+.nyc_output/
+
+# === Misc ===
+*.log
+*.log.*
+
+# === Optional: OS-specific ===
+# macOS
+*.DS_Store
+
+# Windows
+ehthumbs.db
+Desktop.ini
