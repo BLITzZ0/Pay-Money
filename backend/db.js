@@ -1,6 +1,8 @@
 const mongoose  = require('mongoose')
-
-mongoose.connect('mongodb+srv://ababhishek3005:hLEKNKlv3FYOBefw@cluster0.zeajqiw.mongodb.net/')
+require('dotenv').config();
+//const port = process.env.PORT;
+const MONGO_URI = process.env.MONGO_URI
+mongoose.connect(MONGO_URI)
     .then(()=> console.log("Connection SucessFull"))
     .catch(err => console.log("Error Occured", err))
 

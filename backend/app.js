@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require("cors")
 const User = require('./db.js')
-const bcrypt = require("bcrypt")
+const Port = process.env.PORT
 const userRouter = require("./routes/User.js")
 const mainRouter = require("./routes/index.js")
 
@@ -13,9 +13,10 @@ app.use("/api/user/v1",userRouter)
 
 
 
-app.listen(3000,()=>{
-    console.log("App is running in port 3000")
+app.listen(Port,()=>{
+    console.log(`App is running in port ${Port}`)
 })
+
 //user SignUp
 //user SignIn
 //Update User Details firstname last name password
