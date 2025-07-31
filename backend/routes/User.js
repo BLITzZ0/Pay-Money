@@ -3,6 +3,7 @@ const User = require('../db');
 const bcrypt = require("bcrypt")
 const router = express.Router();
 
+
 router.get("/",(req,res)=>{
     res.send("Hello World")
 })
@@ -47,9 +48,6 @@ router.post("/login_user", async(req,res)=>{
         return res.status(201).json({Error : "Invalid Password"})
     }
 
-    // if(is_match){
-    //     res.json({Message : "User Logged in sucessfully"})
-    // }
     res.json({Message : "User Logged in sucessfully"})
 })
 module.exports = router;
