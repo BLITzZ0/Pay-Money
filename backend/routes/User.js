@@ -7,14 +7,14 @@ const secret = process.env.JWT_SECRET
 const zod = require('zod')
 
 const Signup_schema = zod.object({
-    User_name : zod.string().min(10,"Username must be of minimum 10 characters."),
+    User_name : zod.string().email({Message: "User name must email"}),
     first_name: zod.string().min(1,"First Nmae is required."),
     Last_name: zod.string().min(1,"Last name is required"),
     Password: zod.string().min(8,"Password must be of minimum 8 charcters")
 })
 
 const login_schema = zod.object({
-    User_name:zod.string(),
+        User_name : zod.string().email({Message: "User name must email"}),
     Password: zod.string()
 })
 
@@ -25,6 +25,7 @@ const updateUserSchema = zod.object({
 }).refine(data => Object.keys(data).length > 0, {
   message: "At least one field must be provided for update"
 });
+
 router.get("/",(req,res)=>{
     res.send("Hello World")
 })
@@ -141,6 +142,6 @@ router.put("/update_user",isAuthenticated, async (req,res)=>{
     }catch(err){
         res.status(500).json({Warning: "Server Error ", error : err.message})
     }
-
 })
+
 module.exports = router;
