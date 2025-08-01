@@ -14,7 +14,7 @@ const Signup_schema = zod.object({
 })
 
 const login_schema = zod.object({
-        User_name : zod.string().email({Message: "User name must email"}),
+    User_name : zod.string().email({Message: "User name must email"}),
     Password: zod.string()
 })
 
@@ -26,14 +26,16 @@ const updateUserSchema = zod.object({
   message: "At least one field must be provided for update"
 });
 
-router.get("/",(req,res)=>{
-    res.send("Hello World")
+const SearchSchema = zod.object({
+    filter:zod.string().optional()
 })
+
+
 
 router.post("/add_user",async (req,res)=>{
     const Parsed_result = Signup_schema.safeParse(req.body)
     if(!Parsed_result.success){
-        res.status(400).json({Message : "Validation Failed"})
+        res.status(400).json({Message : "Input Validation Failed"})
     }
 
     const {User_name,first_name,Last_name,Password} = Parsed_result.data;
@@ -141,6 +143,32 @@ router.put("/update_user",isAuthenticated, async (req,res)=>{
         })
     }catch(err){
         res.status(500).json({Warning: "Server Error ", error : err.message})
+    }
+})
+
+router.get("/bulk",isAuthenticated,async(req,res)=>{
+    const Parsed_result = SearchSchema.safeParse(req.query)
+    if(!Parsed_result){
+        return res.status(401).json({Error: "Input Validation Failed"})
+    }
+    const filter = Parsed_result.data.filter || "";
+    try{
+        const users = await User.find({
+            $or:[{first_name:{"$regex":filter,$options:"i"}},
+                {Last_name:{"$regex":filter,$options:"i"}},
+                {User_name:{"$regex":filter,$options:"i"}}
+            ]
+        });
+        res.json({
+            users:users.map(user =>({
+                User_name:user.User_name, 
+                first_name:user.first_name,
+                Last_name:user.Last_name,
+                _id:user._id
+            }))
+        });
+    }catch(err){
+        res.status(500).json({Error:"Server Error Occured",message:err.message})
     }
 })
 
