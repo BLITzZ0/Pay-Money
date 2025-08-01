@@ -4,12 +4,38 @@ const bcrypt = require("bcrypt")
 const router = express.Router();
 const jwt = require('jsonwebtoken')
 const secret = process.env.JWT_SECRET
+const zod = require('zod')
+
+const Signup_schema = zod.object({
+    User_name : zod.string().min(10,"Username must be of minimum 10 characters."),
+    first_name: zod.string().min(1,"First Nmae is required."),
+    Last_name: zod.string().min(1,"Last name is required"),
+    Password: zod.string().min(8,"Password must be of minimum 8 charcters")
+})
+
+const login_schema = zod.object({
+    User_name:zod.string(),
+    Password: zod.string()
+})
+
+const updateUserSchema = zod.object({
+  first_name: zod.string().min(1, "First name cannot be empty").optional(),
+  Last_name: zod.string().min(1, "Last name cannot be empty").optional(),
+  Password: zod.string().min(6, "Password must be at least 6 characters").optional()
+}).refine(data => Object.keys(data).length > 0, {
+  message: "At least one field must be provided for update"
+});
 router.get("/",(req,res)=>{
     res.send("Hello World")
 })
 
 router.post("/add_user",async (req,res)=>{
-    const {User_name,first_name,Last_name,Password} = req.body;
+    const Parsed_result = Signup_schema.safeParse(req.body)
+    if(!Parsed_result.success){
+        res.status(400).json({Message : "Validation Failed"})
+    }
+
+    const {User_name,first_name,Last_name,Password} = Parsed_result.data;
 
     //checking for duplicate
     const existing_user = await User.findOne({User_name})
@@ -35,7 +61,13 @@ router.post("/add_user",async (req,res)=>{
 });
 
 router.post("/login_user", async(req,res)=>{
-    const {User_name,Password} = req.body;
+
+    const Parsed_result = login_schema.safeParse(req.body)
+    if(!Parsed_result.success){
+        res.status(400).json({Message:"Validation Failed"})
+    }
+
+    const {User_name,Password} = Parsed_result.data;
     const existing_user=await User.findOne({User_name});
 
     if(!existing_user){
@@ -47,7 +79,10 @@ router.post("/login_user", async(req,res)=>{
     if(!is_match){
         return res.status(401).json({Error : "Invalid Password"})
     }
-    const token = jwt.sign({User_name},secret,{expiresIn: '1h'})
+    const token = jwt.sign(
+        {UserId: existing_user._id,User_name: existing_user.User_name},
+        secret,
+        {expiresIn: '1h'})
     res.json({Message : "User Logged in sucessfully", token})
 })
 
@@ -62,16 +97,20 @@ function isAuthenticated(req,res,next){
     try{
         const token = jwt.verify(auth_token,secret);
         req.User_name = token.User_name
+        req.UserId = token.UserId
         next();
     }catch(err){
         return res.status(400).json({message: 'Invalid token'})
     }
 }
 
-router.post("/update_user",isAuthenticated, async (req,res)=>{
+router.put("/update_user",isAuthenticated, async (req,res)=>{
     try{
-        const userId = req.User_name
-        const {first_name, Last_name, Password} = req.body;
+        const Parsed_result = updateUserSchema.safeParse(req.body);
+        if(!Parsed_result.success){
+           return res.status(401).json({Error : "Input Validation Failed"})
+        }
+        const {User_name, first_name, Last_name, Password} = Parsed_result.data;
 
         const updates = {}
         if(first_name) updates.first_name = first_name
@@ -85,7 +124,7 @@ router.post("/update_user",isAuthenticated, async (req,res)=>{
         }
 
         const updatedUser = await User.findOneAndUpdate(
-            {User_name:userId},
+            {User_name:req.User_name},
             updates,
             {new:true}) // returns the one after updating
 
@@ -102,7 +141,6 @@ router.post("/update_user",isAuthenticated, async (req,res)=>{
     }catch(err){
         res.status(500).json({Warning: "Server Error ", error : err.message})
     }
-
 
 })
 module.exports = router;
