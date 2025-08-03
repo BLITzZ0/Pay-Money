@@ -1,10 +1,11 @@
 const express = require('express');
-const {User} = require('../db');
+const {User, Account} = require('../db');
 const bcrypt = require("bcrypt")
 const router = express.Router();
 const jwt = require('jsonwebtoken')
 const secret = process.env.JWT_SECRET
 const zod = require('zod')
+const isAuthenticated = require("../Middleware/AuthMiddleware.js")
 
 const Signup_schema = zod.object({
     User_name : zod.string().email({Message: "User name must email"}),
@@ -31,7 +32,7 @@ const SearchSchema = zod.object({
 })
 
 
-
+//Adding a new User
 router.post("/add_user",async (req,res)=>{
     const Parsed_result = Signup_schema.safeParse(req.body)
     if(!Parsed_result.success){
@@ -39,6 +40,7 @@ router.post("/add_user",async (req,res)=>{
     }
 
     const {User_name,first_name,Last_name,Password} = Parsed_result.data;
+    const UserId = Parsed_result._id
 
     //checking for duplicate
     const existing_user = await User.findOne({User_name})
@@ -56,13 +58,19 @@ router.post("/add_user",async (req,res)=>{
     })
 
     try{
-        await newUser.save();
+        const saved_user = await newUser.save();
+        await Account.create({
+            userId:saved_user._id,
+            balance:Math.floor(1 + Math.random() * 1000000)
+        });
         res.status(201).json({message:"User created Sucessfully"})
     }catch(err){
         res.status(500).json({error:"Error Creating user"})
     }
 });
 
+
+//User login 
 router.post("/login_user", async(req,res)=>{
 
     const Parsed_result = login_schema.safeParse(req.body)
@@ -89,24 +97,8 @@ router.post("/login_user", async(req,res)=>{
     res.json({Message : "User Logged in sucessfully", token})
 })
 
-function isAuthenticated(req,res,next){
-    const Auth_Header = req.headers.Authorization || req.headers.authorization
-    if(!Auth_Header || !Auth_Header.startsWith('Bearer ')){
-        return res.status(400).json({Error: "User Not Logged In"})
-    }
 
-    const auth_token = Auth_Header.split(' ')[1];
-
-    try{
-        const token = jwt.verify(auth_token,secret);
-        req.User_name = token.User_name
-        req.UserId = token.UserId
-        next();
-    }catch(err){
-        return res.status(400).json({message: 'Invalid token'})
-    }
-}
-
+//User Updates
 router.put("/update_user",isAuthenticated, async (req,res)=>{
     try{
         const Parsed_result = updateUserSchema.safeParse(req.body);
@@ -146,6 +138,8 @@ router.put("/update_user",isAuthenticated, async (req,res)=>{
     }
 })
 
+
+//Getting all the user 
 router.get("/bulk",isAuthenticated,async(req,res)=>{
     const Parsed_result = SearchSchema.safeParse(req.query)
     if(!Parsed_result){

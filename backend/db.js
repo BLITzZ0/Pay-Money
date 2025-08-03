@@ -50,4 +50,5 @@ const AccountSchema = new mongoose.Schema({
 
 const Account = mongoose.model('Account',AccountSchema)
 const User = mongoose.model('User',UserSchema);
+
 module.exports = {User,Account};
