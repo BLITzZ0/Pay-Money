@@ -146,6 +146,7 @@ router.get("/bulk",isAuthenticated,async(req,res)=>{
         return res.status(401).json({Error: "Input Validation Failed"})
     }
     const filter = Parsed_result.data.filter || "";
+    // this is as simple as puttng a like querry in sql.
     try{
         const users = await User.find({
             $or:[{first_name:{"$regex":filter,$options:"i"}},
