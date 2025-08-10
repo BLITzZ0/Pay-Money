@@ -5,7 +5,7 @@ export function BottomWarning({label,buttontext,to}){
         <div>
             {label}
         </div>
-        <Link rel="stylesheet" href={to} >
+        <Link rel="stylesheet" to={to} >
             {buttontext}
         </Link>
     </div>
