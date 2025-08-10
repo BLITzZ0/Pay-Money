@@ -17,6 +17,4 @@ app.listen(Port,()=>{
     console.log(`App is running in port ${Port}`)
 })
 
-//user SignUp
-//user SignIn
-//Update User Details firstname last name password
+ 

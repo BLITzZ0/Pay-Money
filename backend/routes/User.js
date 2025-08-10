@@ -57,6 +57,7 @@ router.post("/add_user",async (req,res)=>{
         Password:hashedpassword
     })
 
+    //Adding random balance from 1 to 1000000 for the currenly added user.
     try{
         const saved_user = await newUser.save();
         await Account.create({
@@ -145,7 +146,7 @@ router.get("/bulk",isAuthenticated,async(req,res)=>{
     if(!Parsed_result){
         return res.status(401).json({Error: "Input Validation Failed"})
     }
-    const filter = Parsed_result.data.filter || "";
+    const filter = Parsed_result.data.filter || ""; 
     // this is as simple as puttng a like querry in sql.
     try{
         const users = await User.find({
