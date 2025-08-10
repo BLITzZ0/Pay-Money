@@ -1,13 +1,17 @@
 import './App.css'
+import { SignupForm } from './pages/SignupForm';
+// import {Login} from './pages/Login'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
-  
   return (
-  <div className="flex flex-col sm:flex-row  md:bg-amber-950">
-    <div className="flex-1 p-4 bg-amber-400">Hello</div>
-    <div className="flex-1 p-4 bg-gray-300">World</div>
-  </div>
-);  
+    <BrowserRouter>
+      <Routes>
+        <Route path="/signup" element={<SignupForm />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
