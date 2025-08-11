@@ -35,11 +35,11 @@ const SearchSchema = zod.object({
 //Adding a new User
 router.post("/add_user",async (req,res)=>{
     const Parsed_result = Signup_schema.safeParse(req.body)
-    if(!Parsed_result.success){
-        res.status(400).json({Message : "Input Validation Failed"})
+    if (!Parsed_result.success) {
+        return res.status(400).json({ Message: "Input Validation Failed", errors: Parsed_result.error.errors });
     }
 
-    const {User_name,first_name,Last_name,Password} = Parsed_result.data;
+    const { User_name, first_name, Last_name, Password } = Parsed_result.data;
     const UserId = Parsed_result._id
 
     //checking for duplicate
@@ -65,6 +65,7 @@ router.post("/add_user",async (req,res)=>{
             balance:Math.floor(1 + Math.random() * 1000000)
         });
         res.status(201).json({message:"User created Sucessfully"})
+        // console.log("User created Sucessfully")
     }catch(err){
         res.status(500).json({error:"Error Creating user"})
     }

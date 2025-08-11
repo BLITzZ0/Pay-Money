@@ -24,7 +24,7 @@ export function Login() {
           <BottomWarning
             label="Don't have an Account?"
             buttontext="Create One"
-            to="/"
+            to="/signup"
           />
         </div>
       </div>
