@@ -9,8 +9,8 @@ const isAuthenticated = require("../Middleware/AuthMiddleware.js")
 
 const Signup_schema = zod.object({
     User_name : zod.string().email({Message: "User name must email"}),
-    first_name: zod.string().min(1,"First Nmae is required."),
-    Last_name: zod.string().min(1,"Last name is required"),
+    first_name: zod.string().min(2,"First Nmae is required."),
+    Last_name: zod.string().min(2,"Last name is required"),
     Password: zod.string().min(8,"Password must be of minimum 8 charcters")
 })
 

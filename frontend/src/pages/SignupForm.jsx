@@ -14,7 +14,6 @@ export function SignupForm() {
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirmPassword] = useState("");
 
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50">
       <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg">
@@ -57,7 +56,8 @@ export function SignupForm() {
 
         <div className="mt-6">
           <Button  label="Create Account"   onClick={() => {
-              axios.post("http://localhost:3000/api/v1/user/add_user", {
+            if(password === confirm_password){
+                axios.post("http://localhost:3000/api/v1/user/add_user", {
                 User_name: user_name,
                 first_name,
                 Last_name: last_name,
@@ -65,7 +65,10 @@ export function SignupForm() {
               })
               .then(res => console.log(res.data))
               .catch(err => console.error(err.response?.data || err));
-            }}/>
+            }
+            else{
+              alert("Password Mismatched")
+            }}}/>
         </div>
 
         <div className="mt-4 text-center">
