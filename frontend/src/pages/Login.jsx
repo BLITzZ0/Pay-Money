@@ -5,10 +5,12 @@ import { Button } from "../components/Button";
 import { BottomWarning } from "../components/BottomWarning";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function Login() {
 const [username,setUsername] = useState("");
 const [password,setPassword] = useState("");
+const navigate = useNavigate();
 // console.log(username, password)
 
   return (
@@ -25,18 +27,27 @@ const [password,setPassword] = useState("");
         <div className="mt-6">
           <Button label="Login" onClick={async ()=>{
            try{
+              if(!username || !password){
+                alert("Please fill in both username and password");
+                return;
+              }
               const login = await axios.post("http://localhost:3000/api/v1/user/login_user",
                 {
                 User_name : username,
                 Password : password
                 }
               );
-              alert("Logged in Sucessfully");
-              console.log(login.data);
+              
+              if(login.data.token){
+                localStorage.setItem("token",login.data.token);
+                navigate("/dashboard");
+              }else{
+                alert("Invalid Credential");
+              }
               
            }catch(err){
             console.log(err)
-            alert("Login Failed")
+            alert(err.response?.data?.message || "Login Failed")
            }
           }}/>
         </div>

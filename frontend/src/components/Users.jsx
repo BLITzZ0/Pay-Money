@@ -1,25 +1,25 @@
-import { Button } from "./Button"
-
-const users = [
-  {
-    _id: { $oid: "6889e194df81c8729bff62c4" },
-    User_name: "ababhishek3005@gmail.com",
-    first_name: "Abhishek",
-    Last_name: "Pandey",
-    Password: "$2b$10$fQ6bskHJ1itLVT.VLFfsZ.VgAsPKmVlStGOruYd9/b4dt2kQfvll.",
-    __v: 0,
-  },
-  {
-    _id: { $oid: "6889e194df81c8729bff62c5" },
-    User_name: "example2@gmail.com",
-    first_name: "John",
-    Last_name: "Doe",
-    Password: "somepasswordhash",
-    __v: 0,
-  },
-];
+import { useEffect, useState } from "react";
+import { Button } from "./Button";
+import axios from "axios";
 
 export const Users = () => {
+    const [users, setUsers] = useState([]);
+    const token = localStorage.getItem("token");
+
+    useEffect(() => {
+        axios.get(`http://localhost:3000/api/v1/user/bulk`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then((response) => {
+            setUsers(response.data.users || []); // fallback to empty array
+        })
+        .catch(err => {
+            console.error("Error Fetching Users: ", err);
+        });
+    }, [token]);
+
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-sm">
             <div className="font-bold text-2xl text-gray-800 mb-6">
@@ -38,15 +38,18 @@ export const Users = () => {
                     viewBox="0 0 24 24" 
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
             <div className="space-y-4">
-                {(users || []).map((user) => (
-                    // <User key={user._id} user={user} />
-                    <User key={user._id.$oid} user={user} />
-
-                ))}
+                {users.length > 0 ? (
+                    users.map((user, index) => (
+                        <User key={index} user={user} />
+                    ))
+                ) : (
+                    <p className="text-gray-500 text-center">No users found</p>
+                )}
             </div>
         </div>
     );
@@ -61,10 +64,10 @@ function User({ user }) {
                 </div>
                 <div>
                     <h3 className="font-semibold text-gray-800">
-                        {user.first_name || "Unknown"} {user.Last_name || ""}
+                        {user.first_name || "Unknown"} {user.last_name || ""}
                     </h3>
                     <p className="text-sm text-gray-500 truncate max-w-xs">
-                        {user.User_name}
+                        {user.user_name}
                     </p>
                 </div>
             </div>

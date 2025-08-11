@@ -6,6 +6,7 @@ import { Button } from "../components/Button";
 import Heading from "../components/Heading";
 import { InputBox } from "../components/InputBox";
 import { SubHeading } from "../components/SubHeading";
+import { useNavigate } from "react-router-dom";
 
 export function SignupForm() {
   const [user_name, setUserName] = useState("");
@@ -13,6 +14,7 @@ export function SignupForm() {
   const [last_name, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50">
@@ -63,8 +65,12 @@ export function SignupForm() {
                 Last_name: last_name,
                 Password: password
               })
-              .then(res => console.log(res.data))
+              .then((res) => {
+                console.log(res.data)
+                navigate("/login")
+              })
               .catch(err => console.error(err.response?.data || err));
+              
             }
             else{
               alert("Password Mismatched")

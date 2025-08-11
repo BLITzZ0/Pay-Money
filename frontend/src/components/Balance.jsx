@@ -9,12 +9,6 @@ export function Balance({ value }) {
                     ₹{value}
                 </div>
             </div>
-            <div className="mt-2 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-                <div 
-                    className="h-full bg-gradient-to-r from-blue-400 to-blue-600" 
-                    style={{ width: `${Math.min(100, Math.max(0, (value / 10000) * 100))}%` }}
-                ></div>
-            </div>
         </div>
     );
 }
