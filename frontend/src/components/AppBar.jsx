@@ -13,7 +13,7 @@ export function AppBar() {
         }
         try{
             const Decode = jwtDecode(token);
-            setUsername(Decode.User_name);
+            setUsername(Decode.first_name);
         }catch(err){
             console.error("Invalid Token",err)
         }

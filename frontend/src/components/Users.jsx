@@ -92,6 +92,8 @@ export const Users = () => {
 };
 
 function User({ user }) {
+    const navigate=useNavigate();
+
     return (
         <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
             <div className="flex items-center space-x-4">
@@ -108,10 +110,11 @@ function User({ user }) {
                 </div>
             </div>
             <div>
-                <Button 
-                    label={"Send Money"} 
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                />
+                <button 
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors" 
+                onClick={()=>{
+                    navigate("/sendmoney")
+                }}>Send Money</button>
             </div>
             
         </div>
