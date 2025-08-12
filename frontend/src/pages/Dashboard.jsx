@@ -26,7 +26,7 @@ export function Dashboard(){
         })
         .then(res=>{
             setBalance(res.data.Balance);
-            console.log(balance)
+            // console.log(balance)
         })
         .catch(err=>{
             console.error("Error Fetching Balance",err)
