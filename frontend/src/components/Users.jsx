@@ -105,7 +105,7 @@ function User({ user }) {
                         {user.first_name || "Unknown"} {user.last_name || ""}
                     </h3>
                     <p className="text-sm text-gray-500 truncate max-w-xs">
-                        {user.User_name}
+                        {user.User_name} 
                     </p>
                 </div>
             </div>
@@ -113,7 +113,7 @@ function User({ user }) {
                 <button 
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors" 
                 onClick={()=>{
-                    navigate("/sendmoney")
+                    navigate("/sendmoney?id=" + encodeURIComponent(user._id) + "&name=" + encodeURIComponent(user.first_name));
                 }}>Send Money</button>
             </div>
             

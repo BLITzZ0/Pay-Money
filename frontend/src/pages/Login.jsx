@@ -37,14 +37,13 @@ const navigate = useNavigate();
                 Password : password
                 }
               );
-              
+
               if(login.data.token){
                 localStorage.setItem("token",login.data.token);
                 navigate("/dashboard");
               }else{
                 alert("Invalid Credential");
               }
-              
            }catch(err){
             console.log(err)
             alert(err.response?.data?.message || "Login Failed")
