@@ -4,16 +4,28 @@ import { Balance } from "../components/Balance";
 import { Users } from "../components/Users";
 import { useEffect, useState } from "react";
 import axios, { AxiosHeaders } from "axios";
+import { jwtDecode } from "jwt-decode";
 
 export function Dashboard(){
     const token = localStorage.getItem("token");
     const [balance, setBalance]=useState(0);
     const navigate = useNavigate();
     useEffect(()=>{
-        
         if(!token){
             navigate("/login");
             return;
+        }
+        try{
+            const Decoded = jwtDecode(token)
+            const current_time = Date.now()/1000;
+            if(Decoded && Decoded.exp < current_time){
+                localStorage.removeItem("token");
+                navigate("/login")
+            }
+        }catch(err){
+            console.error("Invalid request",err);
+            localStorage.removeItem("token");
+            navigate("/login")
         }
     },[navigate,token])
 

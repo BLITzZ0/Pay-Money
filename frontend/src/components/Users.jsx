@@ -18,10 +18,13 @@ export const Users = () => {
         navigate("/login");
         return;
         }
+
+        // if(!filter.trim()) return;
+
         const delayDebounce = setTimeout(()=>{
             try{
             const decoded_user = jwtDecode(token);
-            console.log("Decoded token:", decoded_user);
+            // console.log("Decoded token:", decoded_user);
             setlogged_In_User(decoded_user.User_name);
 
             axios.get(`http://localhost:3000/api/v1/user/bulk?filter=${filter}`, {
