@@ -33,7 +33,7 @@ export const LandingPage = () => {
           </Link>
           <Link
             to="/login"
-            className="border border-white px-6 py-2 rounded-md font-semibold hover:bg-green-600 hover:border-green-600 transition"
+            className="border border-white px-6 py-2 rounded-md font-semibold hover:bg-blue-600 hover:border-blue-600 transition"
           >
             Login
           </Link>
