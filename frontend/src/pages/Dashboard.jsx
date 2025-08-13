@@ -45,7 +45,7 @@ export function Dashboard(){
         .catch(err=>{
             console.error("Error Fetching Balance",err)
         })
-    },[token,balance])
+    },[token, balance, API_URL])
 
     return <div>
         <AppBar />

@@ -18,7 +18,7 @@ export const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <header className="bg-green-500 text-white text-center py-20 flex flex-col items-center">
+      <header className="bg-blue-500 text-white text-center py-20 flex flex-col items-center">
         <h2 className="text-4xl md:text-5xl font-bold mb-4">Welcome to Pay-Money</h2>
         <p className="max-w-2xl text-lg mb-6">
           A fun banking simulation project where you can sign up, get a random starting balance,
