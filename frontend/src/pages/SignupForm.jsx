@@ -15,6 +15,8 @@ export function SignupForm() {
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirmPassword] = useState("");
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50">
@@ -59,7 +61,7 @@ export function SignupForm() {
         <div className="mt-6">
           <Button  label="Create Account"   onClick={() => {
             if(password === confirm_password){
-                axios.post("https://pay-money.onrender.com/api/v1/user/add_user", {
+                axios.post(`${API_URL}/api/v1/user/add_user`, {
                 User_name: user_name,
                 first_name,
                 Last_name: last_name,

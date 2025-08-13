@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 
 export const Users = () => {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [users, setUsers] = useState([]);
     const [logged_In_User, setlogged_In_User] = useState("");
     const [filter, setFilter] = useState("");
@@ -27,7 +28,7 @@ export const Users = () => {
             // console.log("Decoded token:", decoded_user);
             setlogged_In_User(decoded_user.User_name);
 
-            axios.get(`https://pay-money.onrender.com/api/v1/user/bulk?filter=${filter}`, {
+            axios.get(`${API_URL}/api/v1/user/bulk?filter=${filter}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -45,7 +46,7 @@ export const Users = () => {
             }
         },100);
         return () =>clearTimeout(delayDebounce)
-    }, [token,filter,navigate]);
+    }, [token, filter, navigate]);
 
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-sm">

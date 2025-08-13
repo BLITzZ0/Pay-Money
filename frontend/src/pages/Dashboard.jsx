@@ -3,13 +3,15 @@ import { AppBar } from "../components/AppBar";
 import { Balance } from "../components/Balance";
 import { Users } from "../components/Users";
 import { useEffect, useState } from "react";
-import axios, { AxiosHeaders } from "axios";
+import axios  from "axios";
 import { jwtDecode } from "jwt-decode";
 
 export function Dashboard(){
     const token = localStorage.getItem("token");
     const [balance, setBalance]=useState(0);
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
+
     useEffect(()=>{
         if(!token){
             navigate("/login");
@@ -31,7 +33,7 @@ export function Dashboard(){
 
     useEffect(()=>{
         if(!token) return;
-        axios.post("https://pay-money.onrender.com/api/v1/account/balance",{},{
+        axios.post(`${API_URL}/api/v1/account/balance`,{},{
             headers:{
                 Authorization: `Bearer ${token}`
             }

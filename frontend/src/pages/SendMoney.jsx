@@ -10,6 +10,7 @@ export const SendMoney = () => {
     const [amount, setAmount] = useState(0);
     const token = localStorage.getItem("token")
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(()=>{
         if(!token){
@@ -64,7 +65,7 @@ export const SendMoney = () => {
                     />
                     </div>
                     <button onClick={() => {
-                        axios.post("http://localhost:3000/api/v1/account/transfer", {
+                        axios.post(`${API_URL}/api/v1/account/transfer`, {
                             to: id,
                             amount
                         }, {

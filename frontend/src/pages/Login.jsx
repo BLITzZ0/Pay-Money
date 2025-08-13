@@ -11,6 +11,8 @@ export function Login() {
 const [username,setUsername] = useState("");
 const [password,setPassword] = useState("");
 const navigate = useNavigate();
+const API_URL = import.meta.env.VITE_API_URL;
+
 // console.log(username, password)
 
   return (
@@ -31,7 +33,7 @@ const navigate = useNavigate();
                 alert("Please fill in both username and password");
                 return;
               }
-              const login = await axios.post("https://pay-money.onrender.com/api/v1/user/login_user",
+              const login = await axios.post(`${API_URL}/api/v1/user/login_user`,
                 {
                 User_name : username,
                 Password : password
