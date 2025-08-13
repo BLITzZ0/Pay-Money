@@ -6,13 +6,13 @@ export const LandingPage = () => {
       {/* Navbar */}
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-green-600">Pay-Money</h1>
+          <h1 className="text-2xl font-bold text-blue-600">Pay-Money</h1>
           <div className="space-x-6">
-            <Link to="/" className="hover:text-green-600">Home</Link>
-            <Link to="/signup" className="hover:text-green-600">Signup</Link>
-            <Link to="/login" className="hover:text-green-600">Login</Link>
-            {/* <Link to="#about" className="hover:text-green-600">About</Link> */}
-            {/* <Link to="#contact" className="hover:text-green-600">Contact</Link> */}
+            <Link to="/" className="hover:text-blue-600">Home</Link>
+            <Link to="/signup" className="hover:text-blue-600">Signup</Link>
+            <Link to="/login" className="hover:text-blue-600">Login</Link>
+            {/* <Link to="#about" className="hover:text-blue-600">About</Link> */}
+            {/* <Link to="#contact" className="hover:text-blue-600">Contact</Link> */}
           </div>
         </div>
       </nav>
@@ -27,7 +27,7 @@ export const LandingPage = () => {
         <div className="flex space-x-4">
           <Link
             to="/signup"
-            className="bg-white text-green-600 px-6 py-2 rounded-md font-semibold hover:bg-gray-100 transition"
+            className="bg-white text-blue-600 px-6 py-2 rounded-md font-semibold hover:bg-gray-100 transition"
           >
             Get Started
           </Link>
@@ -80,7 +80,7 @@ export const LandingPage = () => {
         </p>
         <a
           href="mailto:ababhishek3005@gmail.com"
-          className="text-green-600 font-semibold mt-2 block"
+          className="text-blue-600 font-semibold mt-2 block"
         >
           ababhishek3005@gmail.com
         </a>
