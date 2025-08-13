@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import axios from "axios";
@@ -114,7 +115,7 @@ function User({ user }) {
                 <button 
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors" 
                 onClick={()=>{
-                    navigate("/sendmoney?id=" + encodeURIComponent(user._id) + "&name=" + encodeURIComponent(user.first_name));
+                    navigate("/sendmoney?id=" + encodeURIComponent(user._id) + "&name=" + encodeURIComponent(user.first_name)+"&username="+encodeURIComponent(user.User_name));
                 }}>Send Money</button>
             </div>
             
