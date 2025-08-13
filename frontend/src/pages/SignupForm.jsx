@@ -59,14 +59,15 @@ export function SignupForm() {
         <div className="mt-6">
           <Button  label="Create Account"   onClick={() => {
             if(password === confirm_password){
-                axios.post("http://localhost:3000/api/v1/user/add_user", {
+                axios.post("https://pay-money.onrender.com/api/v1/user/add_user", {
                 User_name: user_name,
                 first_name,
                 Last_name: last_name,
                 Password: password
               })
               .then((res) => {
-                console.log(res.data)
+                // console.log(res.data);
+                alert("User Created Sucessfully")
                 navigate("/login")
               })
               .catch(err => console.error(err.response?.data || err));

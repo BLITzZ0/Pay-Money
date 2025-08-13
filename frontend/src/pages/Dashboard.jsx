@@ -31,7 +31,7 @@ export function Dashboard(){
 
     useEffect(()=>{
         if(!token) return;
-        axios.post("http://localhost:3000/api/v1/account/balance",{},{
+        axios.post("https://pay-money.onrender.com/api/v1/account/balance",{},{
             headers:{
                 Authorization: `Bearer ${token}`
             }
