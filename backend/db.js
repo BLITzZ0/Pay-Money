@@ -1,4 +1,5 @@
-const mongoose  = require('mongoose')
+const mongoose  = require('mongoose');
+const { number, date, string } = require('zod');
 require('dotenv').config();
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -48,7 +49,43 @@ const AccountSchema = new mongoose.Schema({
     }
 })
 
+const TransactionSchema = new mongoose.Schema({
+    transactionId:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    from:{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    to:{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    amount:{
+        type: Number,
+        required: true
+    },
+    time:{
+        type:date,
+        default:Date.now()
+    },
+    status:{
+        type: String,
+        enum: ["success", "failed", "pending"], 
+        default: "success"
+    },
+    reason:{
+        type: String,
+        required:false
+    }
+})
+
 const Account = mongoose.model('Account',AccountSchema)
 const User = mongoose.model('User',UserSchema);
+const Transaction = mongoose.model('Transaction',TransactionSchema)
 
-module.exports = {User,Account};
+module.exports = {User,Account,Transaction};

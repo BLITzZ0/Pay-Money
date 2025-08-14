@@ -7,6 +7,7 @@ const userRouter = require("./routes/User.js")
 const mainRouter = require("./routes/index.js")
 const accountRouter = require("./routes/Account.js")
 
+
 app.use(express.json())
 app.use(cors())
 app.use("/api/v1", mainRouter)

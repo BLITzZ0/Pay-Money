@@ -1,90 +1,134 @@
 const express = require('express');
 const router = express.Router();
 const zod = require('zod');
-const mongoose  = require('mongoose');
+const mongoose = require('mongoose');
+const { randomUUID } = require('crypto');
+
 const isAuthenticated = require("../Middleware/AuthMiddleware.js");
-const { User, Account } = require('../db.js');
+const { User, Account, Transaction } = require('../db.js');
 
-const transfer_schema=zod.object({
-    to:zod.string(),
-    amount: zod.number().positive("Amount must be greater than 0").finite("Mount must be valid")
-})
+// Zod schema for request validation
+const transfer_schema = zod.object({
+    to: zod.string(),
+    amount: zod.number().positive("Amount must be greater than 0").finite("Amount must be valid")
+});
 
-router.post("/balance", isAuthenticated,async(req,res)=>{
-    try{
-        const userId = req.UserId
-        const User = await Account.findOne({userId:userId})
-        if(!User){
-            return res.status(401).json({message:"User Not found"})
+// GET Balance
+router.post("/balance", isAuthenticated, async (req, res) => {
+    try {
+        const userId = req.UserId;
+        const account = await Account.findOne({ userId });
+
+        if (!account) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({ Balance: account.balance / 100 });
+    } catch (err) {
+        return res.status(500).json({ Error: err.message });
     }
-    return res.status(200).json({Balance : (User.balance / 100)})
-    }catch(err){
-        return res.status(500).json({Error:err.message})
-    }
-})
+});
 
+// POST Transfer
 router.post("/transfer", isAuthenticated, async (req, res) => {
     const session = await mongoose.startSession();
-    session.startTransaction();
+
+    let failureReason = null;
+    let Sender = null;
+    let Receiver = null;
+    let amount = null;
+
     try {
         const user_id = req.UserId;
 
-        const Parsed_result = transfer_schema.safeParse(req.body);
-        if (!Parsed_result.success) {
-            await session.abortTransaction();
-            return res.status(400).json({ Message: "Input Validation failed" });
+        // Validate request body
+        const parsed = transfer_schema.safeParse(req.body);
+        if (!parsed.success) {
+            return res.status(400).json({ Message: "Input validation failed" });
         }
 
-        const { to, amount } = Parsed_result.data;
+        ({ to, amount } = parsed.data); // Extract validated fields
 
-        const Sender = await Account.findOne({ userId: user_id }).session(session);
+        session.startTransaction();
+
+        // Fetch sender account
+        Sender = await Account.findOne({ userId: user_id }).session(session);
         if (!Sender) {
-            await session.abortTransaction();
-            return res.status(401).json({ Error: "User Not Found" });
+            failureReason = "Sender account not found";
+            throw new Error(failureReason);
         }
 
-        const Receiver = await User.findOne({ User_name: to }).session(session);
+        // Fetch receiver user
+        Receiver = await User.findOne({ User_name: to }).session(session);
         if (!Receiver) {
-            await session.abortTransaction();
-            return res.status(401).json({ Error: "User Not Found" });
+            failureReason = "Receiver user not found";
+            throw new Error(failureReason);
         }
 
-        const Receiver_id = await Account.findOne({ userId: Receiver._id }).session(session);
-        if (!Receiver_id) {
-            await session.abortTransaction();
-            return res.status(404).json({ Error: "Account Does Not Exist" });
+        // Fetch receiver account
+        const ReceiverAcc = await Account.findOne({ userId: Receiver._id }).session(session);
+        if (!ReceiverAcc) {
+            failureReason = "Receiver account does not exist";
+            throw new Error(failureReason);
         }
 
-        if (Sender.userId.toString() === Receiver_id.userId.toString()) {
-            await session.abortTransaction();
-            return res.status(400).json({ Error: "Self transfer is not allowed" });
+        // Prevent self-transfer
+        if (Sender.userId.toString() === ReceiverAcc.userId.toString()) {
+            failureReason = "Self-transfer is not allowed";
+            throw new Error(failureReason);
         }
 
+        // Check balance
         if (Sender.balance < amount * 100) {
-            await session.abortTransaction();
-            return res.status(400).json({ Message: "Insufficient Balance" });
+            failureReason = "Insufficient balance";
+            throw new Error(failureReason);
         }
 
+        // Debit sender
         await Account.updateOne(
             { userId: Sender.userId },
             { $inc: { balance: -amount * 100 } }
         ).session(session);
 
+        // Credit receiver
         await Account.updateOne(
-            { userId: Receiver_id.userId },
+            { userId: ReceiverAcc.userId },
             { $inc: { balance: amount * 100 } }
         ).session(session);
 
+        // Log success transaction
+        await Transaction.create([{
+            transactionId: `TXN-${Date.now()}-${randomUUID()}`,
+            from: Sender.userId,
+            to: ReceiverAcc.userId,
+            amount: amount * 100,
+            time: new Date(),
+            status: "success"
+        }], { session });
+
         await session.commitTransaction();
-        res.status(200).json({ Message: "Transaction Successful" });
+        return res.status(200).json({ Message: "Transaction successful" });
 
     } catch (err) {
         await session.abortTransaction();
-        res.status(500).json({ Message: err.message });
+
+        // Log failed transaction only if we know the sender and amount
+        if (Sender && amount !== null) {
+            await Transaction.create({
+                transactionId: `TXN-${Date.now()}-${randomUUID()}`,
+                from: Sender.userId,
+                to: Receiver ? Receiver._id : null,
+                amount: amount * 100,
+                time: new Date(),
+                status: "failed",
+                reason: failureReason || err.message
+            });
+        }
+
+        return res.status(400).json({ Message: err.message });
     } finally {
         session.endSession();
     }
 });
-
 
 module.exports = router;
