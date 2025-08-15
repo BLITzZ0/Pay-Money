@@ -37,6 +37,7 @@ router.post("/transfer", isAuthenticated, async (req, res) => {
     let Sender = null;
     let Receiver = null;
     let amount = null;
+    let Transaction_success = false;
 
     try {
         const user_id = req.UserId;
@@ -97,8 +98,9 @@ router.post("/transfer", isAuthenticated, async (req, res) => {
         ).session(session);
 
         // Log success transaction
+        transactionId = `TXN-${Date.now()}-${randomUUID()}`;
         await Transaction.create([{
-            transactionId: `TXN-${Date.now()}-${randomUUID()}`,
+            transactionId,
             from: Sender.userId,
             to: ReceiverAcc.userId,
             amount: amount * 100,
@@ -107,10 +109,13 @@ router.post("/transfer", isAuthenticated, async (req, res) => {
         }], { session });
 
         await session.commitTransaction();
-        return res.status(200).json({ Message: "Transaction successful" });
+        Transaction_success=true;
+        return res.status(200).json({ Message: "Transaction successful", transactionId });
 
     } catch (err) {
-        await session.abortTransaction();
+        if(!Transaction_success){
+            await session.abortTransaction();
+        }
 
         // Log failed transaction only if we know the sender and amount
         if (Sender && amount !== null) {
