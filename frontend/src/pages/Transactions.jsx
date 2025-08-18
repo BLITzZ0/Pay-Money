@@ -12,7 +12,7 @@ export function Transactions() {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.post(
-          "http://localhost:3000/api/v1/account/transactions",
+          "https://pay-money-production.up.railway.app/api/v1/account/transactions",
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
