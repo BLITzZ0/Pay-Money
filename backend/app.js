@@ -15,7 +15,7 @@ app.use("/api/v1/user",userRouter)
 app.use("/api/v1/account",accountRouter)
 
 app.listen(Port,()=>{
-    console.log(`App is running in port ${Port}`)
+    console.log(`App is running in port ${Port} current time is ${Date.now()}`)
 })
 
  

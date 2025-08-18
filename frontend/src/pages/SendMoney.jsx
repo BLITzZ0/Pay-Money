@@ -1,4 +1,4 @@
-import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import {  useNavigate, useSearchParams } from 'react-router-dom';
 import axios from "axios";
 import { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
@@ -35,22 +35,24 @@ export const SendMoney = () => {
 
     const handleTransfer = async () => {
         try {
-            await axios.post(
+            const res = await axios.post(
                 `${API_URL}/api/v1/account/transfer`,
                 { to: username, amount },
                 { headers: { Authorization: "Bearer " + localStorage.getItem("token") } }
             );
+            let TxnId = res.data.transactionId;
 
             // SweetAlert2 success message
             Swal.fire({
                 icon: "success",
                 title: "Transaction Successful!",
                 showConfirmButton: false,
-                timer: 1500
+                timer: 1500,
+                text:"Transaction ID: " + TxnId
             });
 
-            // Redirect after 1.5 seconds
-            setTimeout(() => navigate("/dashboard"), 1500);
+            // Redirect after 3.5 seconds
+            setTimeout(() => navigate("/dashboard"), 3500);
 
         } catch (error) {
             console.error("Transfer failed", error);

@@ -15,6 +15,7 @@ function isAuthenticated(req, res, next) {
         const token = jwt.verify(auth_token, secret);
         req.User_name = token.User_name;
         req.UserId = token.UserId;
+        req.first_name = token.first_name;
         next();
     } catch (err) {
         return res.status(400).json({ message: 'Invalid token' });
