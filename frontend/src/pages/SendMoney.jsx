@@ -47,12 +47,12 @@ export const SendMoney = () => {
                 icon: "success",
                 title: "Transaction Successful!",
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 2500,
                 text:"Transaction ID: " + TxnId
             });
 
             // Redirect after 3.5 seconds
-            setTimeout(() => navigate("/dashboard"), 3500);
+            setTimeout(() => navigate("/transactions"), 1000);
 
         } catch (error) {
             console.error("Transfer failed", error);
