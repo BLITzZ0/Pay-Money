@@ -38,9 +38,11 @@ router.post("/transfer", isAuthenticated, async (req, res) => {
     let Receiver = null;
     let amount = null;
     let Transaction_success = false;
+    const User_name = req.User_name;
 
     try {
         const user_id = req.UserId;
+        
 
         // Validate request body
         const parsed = transfer_schema.safeParse(req.body);
@@ -101,6 +103,7 @@ router.post("/transfer", isAuthenticated, async (req, res) => {
         transactionId = `TXN-${Date.now()}-${randomUUID()}`;
         await Transaction.create([{
             transactionId,
+            User_name:User_name,
             from: Sender.userId,
             to: ReceiverAcc.userId,
             amount: amount * 100,
@@ -121,6 +124,7 @@ router.post("/transfer", isAuthenticated, async (req, res) => {
         if (Sender && amount !== null) {
             await Transaction.create({
                 transactionId: `TXN-${Date.now()}-${randomUUID()}`,
+                User_name:User_name,
                 from: Sender.userId,
                 to: Receiver ? Receiver._id : null,
                 amount: amount * 100,
@@ -137,20 +141,54 @@ router.post("/transfer", isAuthenticated, async (req, res) => {
 });
 
 router.post("/transactions", isAuthenticated, async (req, res) => {
-    try {
-        const User_name = req.User_name;
-        const transaction = await Transaction.findOne({ User_name: User_name });
+  const UserId = req.UserId;
+  try {
+    const received = await Transaction.find(
+      { to: UserId },
+      { from: 1, amount: 1, transactionId: 1, status: 1, time: 1 }
+    ).populate("from", "User_name");
 
-        if (!transaction) {
-            return res.status(404).json({ message: "No transaction found for this user" });
-        }
+    const sent = await Transaction.find(
+      { from: UserId },
+      { to: 1, amount: 1, transactionId: 1, status: 1, time: 1 }
+    ).populate("to", "User_name");
 
-        return res.status(200).json({ transaction });
-    } catch (error) {
-        console.error("Error fetching transaction:", error);
-        return res.status(500).json({ message: "Server error" });
+    // Normalize both sets into same structure
+
+    const receivedMapped = received.map(txn => ({
+      id: txn.transactionId,
+      counterparty: txn.from.User_name,
+      amount: txn.amount / 100,   
+      status: txn.status,
+      type: "credit",
+      time: txn.time
+    }));
+
+    const sentMapped = sent.map(txn => ({
+      id: txn.transactionId,
+      counterparty: txn.to.User_name,
+      amount: txn.amount / 100,
+      status: txn.status,
+      type: "debit",
+      time: txn.time
+    }));
+
+    // Merge & sort latest first
+    const transactions = [...receivedMapped, ...sentMapped].sort(
+      (a, b) => new Date(b.time) - new Date(a.time)
+    );
+
+    if (transactions.length === 0) {
+      return res.status(404).json({ message: "No transactions found" });
     }
+
+    return res.status(200).json({ transactions });
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 
 module.exports = router;

@@ -69,9 +69,9 @@ const TransactionSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    time:{
-        type:date,
-        default:Date.now()
+    time: {
+        type: Date,           
+        default: Date.now      
     },
     status:{
         type: String,
