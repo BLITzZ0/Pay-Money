@@ -83,12 +83,7 @@ export const Users = () => {
                     <p className="text-gray-500 text-center">No users found</p>
                 )}
             </div>
-            <button onClick={()=>{
-                localStorage.removeItem("token");
-                navigate("/login")
-            }}>
-                Log Out
-            </button>
+            
         </div>
     );
 };

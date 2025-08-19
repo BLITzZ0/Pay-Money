@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 
 export function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [filter, setFilter] = useState("all");
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -25,7 +25,7 @@ export function Transactions() {
       }
     };
     fetchTransactions();
-  }, []);
+  }, [navigate]);
 
   const filteredTransactions =
     filter === "all"
@@ -49,8 +49,7 @@ export function Transactions() {
             </button>
             <h2 className="text-2xl font-bold text-gray-800">Transactions</h2>
           </div>
-          
-          {/* Filter Buttons */}
+
           <div className="flex space-x-2">
             {["all", "credit", "debit"].map((f) => (
               <button
@@ -71,8 +70,7 @@ export function Transactions() {
             ))}
           </div>
         </div>
-
-        {/* Rest of your transactions list code remains the same */}
+ 
         <div className="space-y-3">
           {filteredTransactions.length > 0 ? (
             filteredTransactions.map((txn) => (
