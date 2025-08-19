@@ -11,6 +11,9 @@ export function Transactions() {
     const fetchTransactions = async () => {
       try {
         const token = localStorage.getItem("token");
+        if(!token){
+          navigate("/login")
+        }
         const res = await axios.post(
           "https://pay-money-production.up.railway.app/api/v1/account/transactions",
           {},
