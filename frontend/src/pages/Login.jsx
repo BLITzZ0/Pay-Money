@@ -22,7 +22,7 @@ const API_URL = import.meta.env.VITE_API_URL;
         <SubHeading label="Enter your credentials to continue" />
 
         <div className="space-y-4 mt-4">
-          <InputBox label="Email or username" placeholder="Enter your Email or username" onChange={(e)=>setUsername(e.target.value)} />
+          <InputBox label="Email or Username" placeholder="Enter your Email or username" onChange={(e)=>setUsername(e.target.value)} />
           <InputBox label="password" placeholder="Enter your password" onChange={(e)=>setPassword(e.target.value)} />
         </div>
 
