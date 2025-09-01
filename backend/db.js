@@ -36,7 +36,6 @@ const UserSchema = new mongoose.Schema({
     }
 });
 
-
 const AccountSchema = new mongoose.Schema({
     userId:{
         type: mongoose.Schema.ObjectId,
@@ -84,8 +83,27 @@ const TransactionSchema = new mongoose.Schema({
     }
 })
 
+const OtpSchema = new mongoose.Schema({
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    otp:{
+        type:String,
+        required:true
+    },
+    expiresAt:{
+        type: Date,
+        required:true
+    }
+})
+
+OtpSchema.index({expiresAt: 1}, {expireAfterSeconds: 0});
+
 const Account = mongoose.model('Account',AccountSchema)
 const User = mongoose.model('User',UserSchema);
 const Transaction = mongoose.model('Transaction',TransactionSchema)
+const Otp = mongoose.model('Otp',OtpSchema)
 
-module.exports = {User,Account,Transaction};
+module.exports = {User,Account,Transaction,Otp};

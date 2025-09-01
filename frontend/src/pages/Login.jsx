@@ -23,7 +23,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
         <div className="space-y-4 mt-4">
           <InputBox label="Email or Username" placeholder="Enter your Email or username" onChange={(e)=>setUsername(e.target.value)} />
-          <InputBox label="password" placeholder="Enter your password" onChange={(e)=>setPassword(e.target.value)} />
+          <InputBox label="Password" placeholder="Enter your password" onChange={(e)=>setPassword(e.target.value)} />
         </div>
 
         <div className="mt-6">
@@ -54,6 +54,11 @@ const API_URL = import.meta.env.VITE_API_URL;
         </div>
 
         <div className="mt-4 text-center">
+          <BottomWarning
+            label="Forget Password?"
+            buttontext="Reset"
+            to="/signup"
+          />
           <BottomWarning
             label="Don't have an Account?"
             buttontext="Create One"
