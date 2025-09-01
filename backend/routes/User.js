@@ -170,29 +170,30 @@ router.get("/bulk",isAuthenticated,async(req,res)=>{
 })
 
 router.post("/forget-password",async(req,res)=>{
-    const {email} = req.body;
-    // console.log(email);
-    const user = await User.findOne({User_name: email})
-    if(!user){
-        return res.status(404).json({Message: "User Doesnot exist"})
+    try{
+        const {email} = req.body;
+        // console.log(email);
+        const user = await User.findOne({User_name: email})
+        if(!user){
+            return res.status(404).json({Message: "User Doesnot exist"})
+        }
+
+        const otp = Math.floor(100000 + Math.random()*900000).toString();
+        const hashedotp = await bcrypt.hash(otp,10)
+
+        await Otp.create({
+            email, otp: hashedotp, expiresAt: Date.now() + 5 * 60 * 1000
+        })
+
+        return res.status(200).json({"otp is " : otp})
+    }catch(error){
+        return res.status(500).json({message : "Something Went wrong"})
     }
-
-    const otp = Math.floor(100000 + Math.random()*900000).toString();
-    const hashedotp = await bcrypt.hash(otp,10)
-
-    await Otp.create({
-        email, otp: hashedotp, expiresAt: Date.now() + 5 * 60 * 1000
-    })
-
-    return res.status(200).json({"otp is " : otp})
-    
 })
 
 router.post("/verify-otp", async(req,res)=>{
     const {email, otp} = req.body;
     const user = await Otp.findOne({email : email})
-    // console.log(otp);
-    // console.log(user.otp)
     const result = await bcrypt.compare(otp, user.otp);
     if(result){
         return res.status(200).json({Message: "OTP verified sucessfully"})
