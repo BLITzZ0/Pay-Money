@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const secret = process.env.JWT_SECRET
 const zod = require('zod')
 const isAuthenticated = require("../Middleware/AuthMiddleware.js")
+const sendEmail = require("../Middleware/Mailer.js")
 
 const Signup_schema = zod.object({
     User_name : zod.string().email({Message: "User name must email"}),
@@ -173,6 +174,10 @@ router.post("/forget-password",async(req,res)=>{
     try{
         const {email} = req.body;
         // console.log(email);
+        if (!email) {
+            return res.status(400).json({ error: "Email is required" });
+        }
+
         const user = await User.findOne({User_name: email})
         if(!user){
             return res.status(404).json({Message: "User Doesnot exist"})
@@ -181,13 +186,18 @@ router.post("/forget-password",async(req,res)=>{
         const otp = Math.floor(100000 + Math.random()*900000).toString();
         const hashedotp = await bcrypt.hash(otp,10)
 
-        await Otp.create({
-            email, otp: hashedotp, expiresAt: Date.now() + 5 * 60 * 1000
-        })
+        await Otp.findOneAndUpdate(
+            {email}, {otp: hashedotp, expiresAt: Date.now() + 5 * 60 * 1000},{upsert: true}
+        )
 
-        return res.status(200).json({"otp is " : otp})
+        await sendEmail(
+            email,
+            "Pay-Money Password Reset OTP",
+            `Your OTP for verification is ${otp}. It will expire in 5 minutes.`
+        )
+        return res.status(200).json({Message : "Your Otp is sent to your email"})
     }catch(error){
-        return res.status(500).json({message : "Something Went wrong"})
+        return res.status(500).json({error : "Something Went wrong " + error.message})
     }
 })
 
