@@ -129,6 +129,4 @@ This project is licensed under the **MIT License**.
 
 ## 👨‍💻 Authors
 
-- **Team Pay-Money**  
-  - MCA Graduate Developers (2025 Batch)  
-  - Built as part of **SIH Project** 🎉  
+- **Abhishek Kumar Pandey**
