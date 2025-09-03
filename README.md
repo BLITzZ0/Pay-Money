@@ -47,9 +47,8 @@ It allows users to manage transactions, handle authentication securely, and inte
 Pay-Money/
 ├── backend/            # Express.js + MongoDB server
 │   ├── app.js          # Entry point
-│   ├── models/         # Mongoose models
 │   ├── routes/         # API routes
-│   └── utils/          # Helper functions
+│   └── Middleware/          # Helper functions
 ├── frontend/           # React.js client
 │   ├── src/            # React components & pages
 │   └── public/         # Static assets
