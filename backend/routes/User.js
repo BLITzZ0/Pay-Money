@@ -251,12 +251,10 @@ router.post("/reset-password", async(req,res)=>{
         }
 
         await Otp.deleteOne({email})
-
         res.status(200).json({Message: "Password Updated Sucessfully"})
     }catch(error){
         res.status(500).json({Message: "Something Went Wrong" + error.message})
     }
 })
-
 
 module.exports = router;

@@ -57,7 +57,7 @@ const API_URL = import.meta.env.VITE_API_URL;
           <BottomWarning
             label="Forget Password?"
             buttontext="Reset"
-            to="/signup"
+            to="/forget-password"
           />
           <BottomWarning
             label="Don't have an Account?"

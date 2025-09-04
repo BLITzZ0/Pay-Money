@@ -6,6 +6,7 @@ import { Dashboard } from './pages/Dashboard';
 import { SendMoney } from './pages/SendMoney';
 import { LandingPage } from './pages/LandingPage';
 import { Transactions } from './pages/Transactions';
+import { ForgetPassword } from './pages/ForgetPassword';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/sendmoney" element={<SendMoney />}/>
         <Route path="/transactions" element = {<Transactions/>}/>
+        <Route path ="/forget-password" element={<ForgetPassword/>} />
       </Routes>
     </BrowserRouter>
   );
