@@ -13,7 +13,6 @@ export function ForgetPassword() {
   const [Otp, setOtp] = useState("");
   const [Password, setPassword] = useState("");
   const [RePassword, setRePassword] = useState("");
-
   const API = import.meta.env.VITE_API_URL;
 
 
