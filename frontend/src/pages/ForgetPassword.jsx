@@ -14,8 +14,8 @@ export function ForgetPassword() {
   const [Password, setPassword] = useState("");
   const [RePassword, setRePassword] = useState("");
 
-  // API base URL
-  const API = "http://localhost:3000/api/user"; // change to your backend URL
+  const API = import.meta.env.VITE_API_URL;
+
 
   // Step 1: Request OTP
   const handleGetOtp = async () => {
@@ -38,7 +38,7 @@ export function ForgetPassword() {
       alert("Please enter OTP");
       return;
     }
-    setStep(3); // 👉 You can also call backend verify API if you want separate verification
+    setStep(3); 
   };
 
   // Step 3: Reset Password
