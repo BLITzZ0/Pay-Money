@@ -32,6 +32,16 @@ const SearchSchema = zod.object({
     filter:zod.string().optional()
 })
 
+const resetPasswordSchema = zod.object({
+    email:zod.string().email("Valid Email Required"),
+    otp:zod.string().length(6,"OTP must be of 6 digits."),
+    newPassword:zod.string()
+    .min(8,"Password must be of minimum 8 letters")
+    .regex(/[A-Z]/,"Password must contain at least one Uppercase letter")
+    .regex(/[a-z]/,"Password must contain at least one lowercase letter")
+    .regex(/[0-9]/,"Password must contain atleast one number")
+    .regex(/[?!@#$%&*]/,"Password must contain at least one special character")
+});
 
 //Adding a new User
 router.post("/add_user",async (req,res)=>{
@@ -201,17 +211,52 @@ router.post("/forget-password",async(req,res)=>{
     }
 })
 
-router.post("/verify-otp", async(req,res)=>{
-    const {email, otp} = req.body;
-    const user = await Otp.findOne({email : email})
-    const result = await bcrypt.compare(otp, user.otp);
-    if(result){
-        return res.status(200).json({Message: "OTP verified sucessfully"})
-    }
-    else {
-        return res.status(500).json({Message: "OTP verification unsucessfull"})
+router.post("/reset-password", async(req,res)=>{
+    try{
+        const parsed = resetPasswordSchema.safeParse(req.body)
+        if(!parsed.success){
+            return res.status(400).json({error:"Validation Issue",details:parsed.error.errors})
+        }
+        const {email, otp, newPassword} = parsed.data;
 
+        if(!email || !otp){
+            return res.status(400).json({error : "Email , OTP are required"})
+        }
+
+        const otpEntry = await Otp.findOne({email})
+
+        if(!otpEntry){
+            return res.status(400).json({error: "No OTP request found for this email"})
+        }
+
+        if(otpEntry.expiresAt < Date.now()){
+            return res.status(400).json({error : "OTP has expired"})
+        }
+
+        const isMatch = await bcrypt.compare(otp,otpEntry.otp)
+        if(!isMatch){
+            return res.status(400).json({error: "Incorrect OTP"})
+        }
+
+        const hashedpassword = await bcrypt.hash(newPassword,10)
+
+        const updateUser = await User.findOneAndUpdate(
+            {User_name:email},
+            {Password:hashedpassword},
+            {new: true}
+        )
+
+        if(!updateUser){
+            return res.status(404).json({error: "User Not Found"})
+        }
+
+        await Otp.deleteOne({email})
+
+        res.status(200).json({Message: "Password Updated Sucessfully"})
+    }catch(error){
+        res.status(500).json({Message: "Something Went Wrong" + error.message})
     }
 })
+
 
 module.exports = router;

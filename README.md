@@ -48,7 +48,7 @@ Pay-Money/
 ├── backend/            # Express.js + MongoDB server
 │   ├── app.js          # Entry point
 │   ├── routes/         # API routes
-│   └── Middleware/          # Helper functions
+│   └── Middleware/     # Helper functions
 ├── frontend/           # React.js client
 │   ├── src/            # React components & pages
 │   └── public/         # Static assets
