@@ -1,26 +1,32 @@
-const nodemailer = require("nodemailer");
+const SibApiV3Sdk = require("@sendinblue/client");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false, // use TLS
-  auth: {
-    user: process.env.BREVO_USER, // will hold 965a73001@smtp-brevo.com
-    pass: process.env.BREVO_PASS, // will hold your SMTP key value
-  },
-});
+if (!process.env.BREVO_API_KEY) {
+  console.error("Missing BREVO_API_KEY in .env file");
+}
+
+const client = new SibApiV3Sdk.TransactionalEmailsApi();
+client.setApiKey(
+  SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY
+);
 
 async function sendEmail(to, subject, text) {
   try {
-    const info = await transporter.sendMail({
-      from: "Pay-Money <ababhishek3005@gmail.com>", 
-      to,
+    const emailData = {
+      sender: { name: "Pay-Money", email: "ababhishek3005@gmail.com" },
+      to: [{ email: to }],
       subject,
-      text,
-    });
-    console.log("Email sent:", info.messageId);
+      textContent: text,
+    };
+
+    const response = await client.sendTransacEmail(emailData);
+
+    console.log("Email sent successfully. Message ID:", response?.body?.messageId);
+    return response;
   } catch (err) {
-    console.error("Error sending email:", err);
+    const errorMsg = err.response?.body || err.message || err;
+    console.error("Error sending email:", errorMsg);
+    throw err; 
   }
 }
 
