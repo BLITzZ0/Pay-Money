@@ -1,29 +1,27 @@
-let nodemailer = require('nodemailer')
+const nodemailer = require("nodemailer");
 
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user:'blitzz463@gmail.com',
-        pass: process.env.GMAIL_APP_PASSWORD
-    }
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false, // use TLS
+  auth: {
+    user: process.env.BREVO_USER, // will hold 965a73001@smtp-brevo.com
+    pass: process.env.BREVO_PASS, // will hold your SMTP key value
+  },
 });
 
-
-function sendEmail(to, subject,text){
-    let mailOption = {
-        from: 'blitzz463@gmail.com',
-        to,
-        subject,
-        text,
-    };
-    
-    transporter.sendMail(mailOption,function(error,info){
-        if(error){
-            console.log(error)
-        }else{
-            console.log("Email Sent" + info.response)
-        }
-    })
+async function sendEmail(to, subject, text) {
+  try {
+    const info = await transporter.sendMail({
+      from: "Pay-Money <ababhishek3005@gmail.com>", 
+      to,
+      subject,
+      text,
+    });
+    console.log("Email sent:", info.messageId);
+  } catch (err) {
+    console.error("Error sending email:", err);
+  }
 }
 
 module.exports = sendEmail;

@@ -200,11 +200,11 @@ router.post("/forget-password",async(req,res)=>{
             {email}, {otp: hashedotp, expiresAt: Date.now() + 5 * 60 * 1000},{upsert: true}
         )
 
-        await sendEmail(
-            email,
-            "Pay-Money Password Reset OTP",
+        await sendEmail(email,"Pay-Money Password Reset OTP",
             `Your OTP for verification is ${otp}. It will expire in 5 minutes.`
-        )
+        );
+
+        console.log("email sent")
         return res.status(200).json({Message : "Your Otp is sent to your email"})
     }catch(error){
         return res.status(500).json({error : "Something Went wrong " + error.message})

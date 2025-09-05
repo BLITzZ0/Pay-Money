@@ -23,7 +23,7 @@ export function ForgetPassword() {
         alert("Please enter your email");
         return;
       }
-      const res = await axios.post(`${API}/forget-password`, { email: Email });
+      const res = await axios.post(`${API}/api/v1/user/forget-password`, { email: Email });
       alert(res.data.Message);
       setStep(2);
     } catch (error) {
@@ -52,7 +52,7 @@ export function ForgetPassword() {
         return;
       }
 
-      const res = await axios.post(`${API}/reset-password`, {
+      const res = await axios.post(`${API}/api/v1/user/reset-password`, {
         email: Email,
         otp: Otp,
         newPassword: Password,
