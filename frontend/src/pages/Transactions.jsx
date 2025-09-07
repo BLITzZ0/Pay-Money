@@ -31,7 +31,7 @@ export function Transactions() {
     filter === "all"
       ? transactions
       : transactions.filter((txn) => txn.type === filter);
-
+      console.log(transactions)
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
@@ -101,6 +101,9 @@ export function Transactions() {
                     <p className="text-sm text-gray-500">
                       {new Date(txn.time).toLocaleString()}
                     </p>
+                    <p className="text-sm text-black-400">
+                      {txn.id}
+                    </p>
                   </div>
                 </div>
 
@@ -112,7 +115,7 @@ export function Transactions() {
                   </div>
                   <div className="text-xs mt-1">
                     <span className={`px-2 py-1 rounded-full ${
-                      txn.status === "Completed"
+                      txn.status === "success"
                         ? "bg-green-100 text-green-700"
                         : txn.status === "Pending"
                         ? "bg-yellow-100 text-yellow-700"
