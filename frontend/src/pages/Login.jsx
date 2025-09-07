@@ -1,4 +1,5 @@
 import Heading from "../components/Heading";
+import { AppBarLogin_Signup } from "../components/AppBarLogin_Signup";
 import { SubHeading } from "../components/SubHeading";
 import { InputBox } from "../components/InputBox";
 import { Button } from "../components/Button";
@@ -13,9 +14,12 @@ const [password,setPassword] = useState("");
 const navigate = useNavigate();
 const API_URL = import.meta.env.VITE_API_URL;
 
-// console.log(username, password)
 
   return (
+
+    <div>
+      <AppBarLogin_Signup />
+
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50">
       <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg">
         <Heading label="Log In" />
@@ -67,5 +71,6 @@ const API_URL = import.meta.env.VITE_API_URL;
         </div>
       </div>
     </div>
+  </div>
   );
 }
