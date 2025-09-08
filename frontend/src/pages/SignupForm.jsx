@@ -77,7 +77,8 @@ export function SignupForm() {
                       })
                       .then((res) => {
                         alert("User Created Sucessfully");
-                        navigate("/login");
+                        localStorage.setItem("token",res.data.token);
+                        navigate("/dashboard");
                       })
                       .catch((err) =>
                         console.error(err.response?.data || err)

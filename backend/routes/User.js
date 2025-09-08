@@ -68,15 +68,23 @@ router.post("/add_user",async (req,res)=>{
         Password:hashedpassword
     })
 
-    //Adding random balance from 1 to 1000000 for the currenly added user.
     try{
+    //Adding random balance from 1 to 1000000 for the currenly added user.
+    
         const saved_user = await newUser.save();
         await Account.create({
             userId:saved_user._id,
             balance:Math.floor(1 + Math.random() * 1000000)
         });
-        res.status(201).json({message:"User created Sucessfully"})
-        // console.log("User created Sucessfully")
+
+        const token = jwt.sign({
+            UserId: saved_user._id,
+            User_name: saved_user.User_name,
+            first_name: saved_user.first_name},
+            secret,
+            {expiresIn: '1h'});
+
+        res.status(201).json({message:"User created Sucessfully",token})
     }catch(err){
         res.status(500).json({error:"Error Creating user"})
     }
@@ -88,7 +96,7 @@ router.post("/login_user", async(req,res)=>{
 
     const Parsed_result = login_schema.safeParse(req.body)
     if(!Parsed_result.success){
-        res.status(400).json({Message:"Validation Failed"})
+        return res.status(400).json({Message:"Validation Failed"})
     }
 
     const {User_name,Password} = Parsed_result.data;
