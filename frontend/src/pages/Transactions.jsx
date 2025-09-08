@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
-
+const App_URI = import.meta.env.VITE_API_URL;;
 export function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [filter, setFilter] = useState("all");
@@ -15,7 +15,7 @@ export function Transactions() {
           navigate("/login")
         }
         const res = await axios.post(
-          "https://pay-money-production.up.railway.app/api/v1/account/transactions",
+          `${App_URI}/api/v1/account/transactions`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -31,7 +31,6 @@ export function Transactions() {
     filter === "all"
       ? transactions
       : transactions.filter((txn) => txn.type === filter);
-      console.log(transactions)
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">

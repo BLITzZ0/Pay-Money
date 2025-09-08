@@ -212,7 +212,7 @@ router.post("/forget-password",async(req,res)=>{
             `Your OTP for verification is ${otp}. It will expire in 5 minutes.`
         );
 
-        console.log("email sent")
+        // console.log("email sent")
         return res.status(200).json({Message : "Your Otp is sent to your email"})
     }catch(error){
         return res.status(500).json({error : "Something Went wrong " + error.message})
