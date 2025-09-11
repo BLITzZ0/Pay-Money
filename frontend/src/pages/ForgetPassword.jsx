@@ -6,6 +6,7 @@ import { SubHeading } from "../components/SubHeading";
 import { OtpBox } from "../components/OtpBox";
 import { Button } from "../components/Button";
 import { BottomWarning } from "../components/BottomWarning";
+import { AppBarLogin_Signup } from "../components/AppBarLogin_Signup";
 
 export function ForgetPassword() {
   const [step, setStep] = useState(1);
@@ -68,6 +69,7 @@ export function ForgetPassword() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50">
+      <AppBarLogin_Signup />
       <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg">
         <Heading label="Reset Password" />
         <SubHeading label="Follow the steps to reset your password" />
