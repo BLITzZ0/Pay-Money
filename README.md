@@ -5,7 +5,6 @@ It allows users to manage transactions, handle authentication securely, and inte
 
 🚀 **Deployed Links**  
 - **Frontend (Vercel):** [Pay-Money Frontend](https://pay-money-three.vercel.app/)  
-- **Backend (Railway):** [Pay-Money Backend](https://your-railway-backend-url)  
 
 ---
 
