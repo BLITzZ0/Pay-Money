@@ -36,7 +36,6 @@ It allows users to manage transactions, handle authentication securely, and inte
 
 **Deployment:**  
 - Vercel (Frontend)  
-- Railway (Backend)  
 
 ---
 
