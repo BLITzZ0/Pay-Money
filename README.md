@@ -39,23 +39,7 @@ It allows users to manage transactions, handle authentication securely, and inte
 
 ---
 
-## 📂 Project Structure
 
-```
-Pay-Money/
-├── backend/            # Express.js + MongoDB server
-│   ├── app.js          # Entry point
-│   ├── routes/         # API routes
-│   └── Middleware/     # Helper functions
-├── frontend/           # React.js client
-│   ├── src/            # React components & pages
-│   └── public/         # Static assets
-├── .gitignore
-├── README.md           # Project documentation
-└── package.json
-```
-
----
 
 ## ⚙️ Installation & Setup
 
