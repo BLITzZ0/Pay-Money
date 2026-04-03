@@ -3,7 +3,7 @@
 A **full-stack payment management system** built using the **MERN stack** (MongoDB, Express.js, React.js, Node.js).  
 It allows users to manage transactions, handle authentication securely, and interact with a smooth frontend interface.  
 
-🚀 **Deployed Links**  
+ **Deployed Links**  
 - **Frontend (Vercel):** [Pay-Money Frontend](https://pay-money-three.vercel.app/)  
 
 ---
